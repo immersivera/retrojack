@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { GameState, GameResult } from './types/game';
 import { 
   initializeGame, 
@@ -20,6 +21,7 @@ function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboard, setLeaderboard] = useState(getLeaderboard());
+  const navigate = useNavigate();
 
   const dealInitialCards = useCallback((state: GameState) => {
     let newState = { ...state };
@@ -57,6 +59,7 @@ function App() {
     }, 500);
     
     setGameState(initialState);
+    navigate('/game');
   };
 
   const hit = () => {
@@ -211,16 +214,16 @@ function App() {
     }
   }, [gameState?.gamePhase, playDealerTurn]);
 
-  if (!gameState) {
-    return (
-      <>
-        <PlayerSetup onStartGame={startGame} />
-        <CookieBanner />
-      </>
-    );
-  }
+  const setupPage = (
+    <>
+      <PlayerSetup onStartGame={startGame} />
+      <CookieBanner />
+    </>
+  );
 
-  return (
+  const gamePage = !gameState ? (
+    <Navigate to="/" replace />
+  ) : (
     <div className="min-h-screen bg-gradient-to-br from-green-800 to-green-900 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -297,6 +300,14 @@ function App() {
       {/* Cookie consent */}
       <CookieBanner />
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={setupPage} />
+      <Route path="/game" element={gamePage} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
