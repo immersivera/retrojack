@@ -28,7 +28,7 @@ function App() {
   const navigate = useNavigate();
 
   const dealInitialCards = useCallback((state: GameState) => {
-    let newState = { ...state };
+    const newState = { ...state };
     
     // Deal 2 cards to each player
     for (let round = 0; round < 2; round++) {
@@ -145,7 +145,7 @@ function App() {
   const playDealerTurn = useCallback(() => {
     if (!gameState || gameState.gamePhase !== 'dealer-turn') return;
     
-    let newDealer = { ...gameState.dealer };
+    const newDealer = { ...gameState.dealer };
     let newDeck = [...gameState.deck];
     
     const dealerPlay = () => {
