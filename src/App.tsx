@@ -15,6 +15,7 @@ import PlayerHand from './components/PlayerHand';
 import GameControls from './components/GameControls';
 import Leaderboard from './components/Leaderboard';
 import BoltLogo from './components/BoltLogo';
+import CookieBanner from './components/CookieBanner';
 
 function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
@@ -216,6 +217,7 @@ function App() {
       <>
         <PlayerSetup onStartGame={startGame} />
         <BoltLogo />
+        <CookieBanner />
       </>
     );
   }
@@ -296,6 +298,9 @@ function App() {
 
       {/* Bolt Logo */}
       <BoltLogo />
+
+      {/* Cookie consent */}
+      <CookieBanner />
     </div>
   );
 }
