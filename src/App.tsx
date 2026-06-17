@@ -22,6 +22,7 @@ import LegalPage from './components/LegalPage';
 function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [showAboutSubmenu, setShowAboutSubmenu] = useState(false);
   const [leaderboard, setLeaderboard] = useState(getLeaderboard());
   const dealTimeoutRef = useRef<number | null>(null);
   const navigate = useNavigate();
@@ -249,6 +250,7 @@ function App() {
 
   const openLegalPage = (path: string) => {
     setShowMenu(false);
+    setShowAboutSubmenu(false);
     navigate(path);
   };
 
@@ -305,23 +307,36 @@ function App() {
             Cookie settings
           </button>
           <button
-            onClick={() => openLegalPage('/cookie-policy')}
-            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+            onClick={() => setShowAboutSubmenu((prev) => !prev)}
+            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200 flex items-center justify-between"
           >
-            Cookie policy
+            <span>About</span>
+            <span className={`transform transition-transform duration-200 ${showAboutSubmenu ? 'rotate-180' : ''}`}>
+              ▼
+            </span>
           </button>
-          <button
-            onClick={() => openLegalPage('/privacy')}
-            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
-          >
-            Privacy policy
-          </button>
-          <button
-            onClick={() => openLegalPage('/terms')}
-            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
-          >
-            Terms of service
-          </button>
+          {showAboutSubmenu && (
+            <div className="bg-green-800 border-t border-green-600">
+              <button
+                onClick={() => openLegalPage('/cookie-policy')}
+                className="w-full px-6 py-2 text-left text-gray-200 font-semibold hover:bg-green-700 transition-colors duration-200"
+              >
+                Cookie policy
+              </button>
+              <button
+                onClick={() => openLegalPage('/privacy')}
+                className="w-full px-6 py-2 text-left text-gray-200 font-semibold hover:bg-green-700 transition-colors duration-200"
+              >
+                Privacy policy
+              </button>
+              <button
+                onClick={() => openLegalPage('/terms')}
+                className="w-full px-6 py-2 text-left text-gray-200 font-semibold hover:bg-green-700 transition-colors duration-200"
+              >
+                Terms of service
+              </button>
+            </div>
+          )}
           {gameState && (
             <button
               onClick={stopGame}
