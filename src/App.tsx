@@ -14,7 +14,6 @@ import DealerHand from './components/DealerHand';
 import PlayerHand from './components/PlayerHand';
 import GameControls from './components/GameControls';
 import Leaderboard from './components/Leaderboard';
-import BoltLogo from './components/BoltLogo';
 import CookieBanner from './components/CookieBanner';
 
 function App() {
@@ -216,7 +215,6 @@ function App() {
     return (
       <>
         <PlayerSetup onStartGame={startGame} />
-        <BoltLogo />
         <CookieBanner />
       </>
     );
@@ -295,9 +293,6 @@ function App() {
           onClose={() => setShowLeaderboard(false)}
         />
       )}
-
-      {/* Bolt Logo */}
-      <BoltLogo />
 
       {/* Cookie consent */}
       <CookieBanner />
