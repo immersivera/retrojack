@@ -86,8 +86,10 @@ function updateConsentMode(categories: ConsentCategories) {
 let gtmLoaded = false;
 
 /** Inject the GTM container script once. Only call after consent defaults are set. */
-export function loadGTM() {
+export function loadGTM(categories?: ConsentCategories) {
   if (gtmLoaded || !GTM_ID) return;
+  // Only load GTM if at least one optional category is granted
+  if (categories && !categories.analytics && !categories.marketing) return;
   gtmLoaded = true;
 
   window.dataLayer = window.dataLayer || [];
@@ -110,11 +112,11 @@ export function loadGTM() {
   document.body.appendChild(noscript);
 }
 
-/** Apply a consent decision: persist, update Consent Mode, and load GTM. */
+/** Apply a consent decision: persist, update Consent Mode, and load GTM if consent granted. */
 export function applyConsent(categories: ConsentCategories): ConsentState {
   const state = persistConsent(categories);
   updateConsentMode(state.categories);
-  loadGTM();
+  loadGTM(state.categories);
   return state;
 }
 
@@ -138,7 +140,7 @@ export function initConsent(): boolean {
   const stored = getStoredConsent();
   if (stored) {
     updateConsentMode(stored.categories);
-    loadGTM();
+    loadGTM(stored.categories);
     return true;
   }
   return false;

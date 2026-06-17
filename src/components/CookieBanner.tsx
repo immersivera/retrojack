@@ -39,7 +39,6 @@ const CookieBanner: React.FC = () => {
     setShowBanner(false);
   };
 
-
   const handleSave = (categories: ConsentCategories) => {
     applyConsent(categories);
     setShowPreferences(false);
