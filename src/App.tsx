@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
 import { GameState, GameResult } from './types/game';
 import { 
   initializeGame, 
@@ -359,9 +359,12 @@ function App() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-4xl sm:text-6xl font-bold text-yellow-400 mb-2">
+          <Link
+            to="/"
+            className="text-4xl sm:text-6xl font-bold text-yellow-400 mb-2 hover:text-yellow-300 transition-colors duration-200 cursor-pointer"
+          >
             Retro Blackjack
-          </h1>
+          </Link>
           <p className="text-white text-lg">Round {gameState.round}</p>
         </div>
 

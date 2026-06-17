@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Play } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface PlayerSetupProps {
   onStartGame: (playerNames: string[]) => void;
@@ -37,7 +38,7 @@ const PlayerSetup: React.FC<PlayerSetupProps> = ({ onStartGame }) => {
   };
 
   const handleStartGame = () => {
-    const newErrors = playerNames.map(name => {
+    const newErrors: string[] = playerNames.map(name => {
       if (!name.trim()) return 'Name is required';
       if (name.trim().length < 2) return 'Name must be at least 2 characters';
       return '';
@@ -69,7 +70,12 @@ const PlayerSetup: React.FC<PlayerSetupProps> = ({ onStartGame }) => {
     <div className="min-h-screen bg-gradient-to-br from-green-800 to-green-900 flex items-center justify-center p-4">
       <div className="bg-green-900 rounded-xl p-8 border-2 border-yellow-400 shadow-2xl max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-yellow-400 mb-2">Retro Blackjack</h1>
+          <Link
+            to="/"
+            className="text-4xl font-bold text-yellow-400 mb-2 hover:text-yellow-300 transition-colors duration-200 cursor-pointer"
+          >
+            Retro Blackjack
+          </Link>
           <p className="text-white">Enter player names to start the game</p>
         </div>
 
