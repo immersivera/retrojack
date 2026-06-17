@@ -106,11 +106,7 @@ const CookiePolicy: React.FC<CookiePolicyProps> = ({ onClose, onManagePreference
 
         <Section title="8. Contact">
           <p>
-            For privacy requests, contact us at{' '}
-            <a href="mailto:privacy@example.com" className="text-yellow-400 underline">
-              privacy@example.com
-            </a>
-            .
+            For privacy requests, contact us at privacy@retrojack.net.
           </p>
         </Section>
 

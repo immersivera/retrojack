@@ -17,6 +17,7 @@ import PlayerHand from './components/PlayerHand';
 import GameControls from './components/GameControls';
 import Leaderboard from './components/Leaderboard';
 import CookieBanner from './components/CookieBanner';
+import LegalPage from './components/LegalPage';
 
 function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
@@ -246,6 +247,11 @@ function App() {
     navigate('/leaderboard');
   };
 
+  const openLegalPage = (path: string) => {
+    setShowMenu(false);
+    navigate(path);
+  };
+
   useEffect(() => {
     if (gameState?.gamePhase === 'dealer-turn') {
       playDealerTurn();
@@ -297,6 +303,24 @@ function App() {
             className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
           >
             Cookie settings
+          </button>
+          <button
+            onClick={() => openLegalPage('/cookie-policy')}
+            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+          >
+            Cookie policy
+          </button>
+          <button
+            onClick={() => openLegalPage('/privacy')}
+            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+          >
+            Privacy policy
+          </button>
+          <button
+            onClick={() => openLegalPage('/terms')}
+            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+          >
+            Terms of service
           </button>
           {gameState && (
             <button
@@ -397,6 +421,10 @@ function App() {
     </div>
   );
 
+  const manageCookiesFromLegalPage = () => {
+    window.dispatchEvent(new Event('open-cookie-settings'));
+  };
+
   return (
     <>
       {menu}
@@ -404,6 +432,9 @@ function App() {
         <Route path="/" element={setupPage} />
         <Route path="/game" element={gamePage} />
         <Route path="/leaderboard" element={leaderboardPage} />
+        <Route path="/cookie-policy" element={<LegalPage type="cookie" onManageCookies={manageCookiesFromLegalPage} />} />
+        <Route path="/privacy" element={<LegalPage type="privacy" />} />
+        <Route path="/terms" element={<LegalPage type="terms" />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <CookieBanner />
