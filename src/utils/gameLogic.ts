@@ -1,5 +1,7 @@
 import { Card, Player, Dealer, GameState } from '../types/game';
 
+let globalCardIdCounter = 0;
+
 export const createDeck = (): Card[] => {
   const suits: Card['suit'][] = ['hearts', 'diamonds', 'clubs', 'spades'];
   const ranks: Card['rank'][] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -16,7 +18,7 @@ export const createDeck = (): Card[] => {
         suit,
         rank,
         value,
-        id: `${suit}-${rank}-${Math.random().toString(36).substr(2, 9)}`
+        id: `${suit}-${rank}-${globalCardIdCounter++}`
       });
     });
   });
