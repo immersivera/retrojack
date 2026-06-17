@@ -47,8 +47,8 @@ const CookiePolicy: React.FC<CookiePolicyProps> = ({ onClose, onManagePreference
         <Section title="2. What are cookies?">
           <p>
             Cookies are small text files stored on your device. Similar technologies include
-            <span> </span>localStorage and pixels. We use them to keep the game working, remember your
-            preferences, and—only with your permission—measure usage and support marketing.
+            <span> </span>localStorage and pixels. We use them to keep the game working and—only with
+            your permission—measure usage and support marketing.
           </p>
         </Section>
 
@@ -56,11 +56,8 @@ const CookiePolicy: React.FC<CookiePolicyProps> = ({ onClose, onManagePreference
           <ul className="list-disc list-inside space-y-2">
             <li>
               <span className="font-semibold text-white">Strictly necessary</span> — required for the
-              site to function (e.g. storing your consent choice and local game data). Always active.
-            </li>
-            <li>
-              <span className="font-semibold text-white">Preferences</span> — remember settings such
-              as player names and display options.
+              site to function (e.g. storing your consent choice, player names, and local leaderboard
+              data). Always active.
             </li>
             <li>
               <span className="font-semibold text-white">Analytics</span> — help us understand how the
@@ -102,7 +99,7 @@ const CookiePolicy: React.FC<CookiePolicyProps> = ({ onClose, onManagePreference
 
         <Section title="7. Managing your choices">
           <p>
-            You can update your preferences any time using the button below or the "Cookie settings"
+            You can update your cookie choices any time using the button below or the "Cookie settings"
             link. You can also clear cookies in your browser settings.
           </p>
         </Section>

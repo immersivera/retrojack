@@ -21,13 +21,8 @@ const CATEGORIES: CategoryMeta[] = [
     key: 'necessary',
     title: 'Strictly necessary',
     description:
-      'Required for the site to function, including remembering your consent choice. Always on.',
+      'Required for the site to function, including remembering your consent choice and local leaderboard data. Always on.',
     locked: true,
-  },
-  {
-    key: 'preferences',
-    title: 'Preferences',
-    description: 'Remember settings such as player names and display options.',
   },
   {
     key: 'analytics',
@@ -96,7 +91,7 @@ const CookiePreferences: React.FC<CookiePreferencesProps> = ({
 
         <p className="text-gray-200 text-sm mb-5">
           We use cookies to run the game and, with your permission, to improve it. Choose which
-          categories you allow. You can change this any time.
+          optional categories you allow. You can change this any time.
         </p>
 
         <div className="space-y-3">

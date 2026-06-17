@@ -2,7 +2,6 @@
 
 export interface ConsentCategories {
   necessary: boolean; // always true, cannot be disabled
-  preferences: boolean;
   analytics: boolean;
   marketing: boolean;
 }
@@ -27,7 +26,6 @@ declare global {
 
 export const DEFAULT_CATEGORIES: ConsentCategories = {
   necessary: true,
-  preferences: false,
   analytics: false,
   marketing: false,
 };
@@ -76,8 +74,8 @@ function updateConsentMode(categories: ConsentCategories) {
     ad_user_data: grant(categories.marketing),
     ad_personalization: grant(categories.marketing),
     analytics_storage: grant(categories.analytics),
-    functionality_storage: grant(categories.preferences),
-    personalization_storage: grant(categories.preferences),
+    functionality_storage: 'denied',
+    personalization_storage: 'denied',
     security_storage: 'granted',
   });
   // Surface a custom event so GTM triggers can react to consent changes.
@@ -123,7 +121,6 @@ export function applyConsent(categories: ConsentCategories): ConsentState {
 export function acceptAll(): ConsentState {
   return applyConsent({
     necessary: true,
-    preferences: true,
     analytics: true,
     marketing: true,
   });
