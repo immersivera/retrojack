@@ -87,17 +87,6 @@ const CookieBanner: React.FC = () => {
         </div>
       )}
 
-      {/* Persistent settings button once a choice has been made */}
-      {!showBanner && !showPreferences && (
-        <button
-          onClick={() => setShowPreferences(true)}
-          aria-label="Cookie settings"
-          className="fixed bottom-4 left-4 z-40 bg-green-900 border-2 border-yellow-400 text-yellow-400 rounded-full p-3 shadow-lg hover:bg-green-800 transition-all duration-200"
-        >
-          <Cookie className="w-5 h-5" />
-        </button>
-      )}
-
       {showPreferences && (
         <CookiePreferences
           initial={currentCategories}

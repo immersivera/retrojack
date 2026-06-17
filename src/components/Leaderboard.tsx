@@ -4,10 +4,17 @@ import { LeaderboardEntry } from '../types/game';
 
 interface LeaderboardProps {
   leaderboard: LeaderboardEntry[];
-  onClose: () => void;
+  onClose?: () => void;
+  variant?: 'modal' | 'page';
+  closeLabel?: string;
 }
 
-const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboard, onClose }) => {
+const Leaderboard: React.FC<LeaderboardProps> = ({
+  leaderboard,
+  onClose,
+  variant = 'modal',
+  closeLabel = 'Close',
+}) => {
   const getRankIcon = (index: number) => {
     switch (index) {
       case 0: return <Trophy className="w-6 h-6 text-yellow-400" />;
@@ -25,28 +32,29 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboard, onClose }) => {
     return new Date(dateString).toLocaleDateString();
   };
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-green-900 rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto border-2 border-yellow-400">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-yellow-400 flex items-center gap-2">
-            <Trophy className="w-8 h-8" />
-            Leaderboard
-          </h2>
+  const content = (
+    <div className="bg-green-900 rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto border-2 border-yellow-400">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-yellow-400 flex items-center gap-2">
+          <Trophy className="w-8 h-8" />
+          Leaderboard
+        </h2>
+        {onClose && (
           <button
             onClick={onClose}
             className="text-white hover:text-yellow-400 text-2xl font-bold transition-colors duration-200"
           >
             ×
           </button>
-        </div>
+        )}
+      </div>
 
-        {leaderboard.length === 0 ? (
+      {leaderboard.length === 0 ? (
           <div className="text-center text-white py-8">
             <p className="text-xl">No games played yet!</p>
             <p className="text-gray-400 mt-2">Start playing to see your stats here.</p>
           </div>
-        ) : (
+      ) : (
           <div className="space-y-3">
             {leaderboard.map((entry, index) => (
               <div
@@ -79,17 +87,28 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboard, onClose }) => {
               </div>
             ))}
           </div>
-        )}
+      )}
 
+      {onClose && (
         <div className="mt-6 text-center">
           <button
             onClick={onClose}
             className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold rounded-lg shadow-lg hover:from-green-400 hover:to-green-500 transform hover:scale-105 transition-all duration-200"
           >
-            Close
+            {closeLabel}
           </button>
         </div>
-      </div>
+      )}
+    </div>
+  );
+
+  if (variant === 'page') {
+    return content;
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      {content}
     </div>
   );
 };

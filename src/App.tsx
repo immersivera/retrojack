@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Menu, X } from 'lucide-react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { GameState, GameResult } from './types/game';
 import { 
@@ -19,8 +20,9 @@ import CookieBanner from './components/CookieBanner';
 
 function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
-  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [leaderboard, setLeaderboard] = useState(getLeaderboard());
+  const dealTimeoutRef = useRef<number | null>(null);
   const navigate = useNavigate();
 
   const dealInitialCards = useCallback((state: GameState) => {
@@ -50,12 +52,17 @@ function App() {
   const startGame = (playerNames: string[]) => {
     const initialState = initializeGame(playerNames);
     
-    setTimeout(() => {
+    if (dealTimeoutRef.current) {
+      window.clearTimeout(dealTimeoutRef.current);
+    }
+
+    dealTimeoutRef.current = window.setTimeout(() => {
       const stateWithCards = dealInitialCards(initialState);
       setGameState({
         ...stateWithCards,
         gamePhase: 'playing'
       });
+      dealTimeoutRef.current = null;
     }, 500);
     
     setGameState(initialState);
@@ -208,18 +215,103 @@ function App() {
     startGame(playerNames);
   };
 
+  const stopGame = () => {
+    if (dealTimeoutRef.current) {
+      window.clearTimeout(dealTimeoutRef.current);
+      dealTimeoutRef.current = null;
+    }
+    setGameState(null);
+    setShowMenu(false);
+    navigate('/');
+  };
+
+  const openCookieSettings = () => {
+    setShowMenu(false);
+    window.dispatchEvent(new Event('open-cookie-settings'));
+  };
+
+  const openMainPage = () => {
+    setShowMenu(false);
+    navigate('/');
+  };
+
+  const openGamePage = () => {
+    setShowMenu(false);
+    navigate('/game');
+  };
+
+  const openLeaderboard = () => {
+    setShowMenu(false);
+    setLeaderboard(getLeaderboard());
+    navigate('/leaderboard');
+  };
+
   useEffect(() => {
     if (gameState?.gamePhase === 'dealer-turn') {
       playDealerTurn();
     }
   }, [gameState?.gamePhase, playDealerTurn]);
 
-  const setupPage = (
-    <>
-      <PlayerSetup onStartGame={startGame} />
-      <CookieBanner />
-    </>
+  useEffect(() => {
+    return () => {
+      if (dealTimeoutRef.current) {
+        window.clearTimeout(dealTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const menu = (
+    <div className="fixed top-4 left-4 z-40">
+      <button
+        onClick={() => setShowMenu((prev) => !prev)}
+        aria-label="Open menu"
+        className="bg-green-900 border-2 border-yellow-400 text-yellow-400 rounded-lg p-3 shadow-lg hover:bg-green-800 transition-all duration-200"
+      >
+        {showMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
+      {showMenu && (
+        <div className="mt-2 w-52 bg-green-900 border-2 border-yellow-400 rounded-xl shadow-2xl overflow-hidden">
+          <button
+            onClick={openMainPage}
+            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+          >
+            Home
+          </button>
+          {gameState && (
+            <button
+              onClick={openGamePage}
+              className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+            >
+              Game
+            </button>
+          )}
+          <button
+            onClick={openLeaderboard}
+            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+          >
+            Leaderboard
+          </button>
+          <button
+            onClick={openCookieSettings}
+            className="w-full px-4 py-3 text-left text-white font-bold hover:bg-green-800 transition-colors duration-200"
+          >
+            Cookie settings
+          </button>
+          {gameState && (
+            <button
+              onClick={stopGame}
+              className="w-full px-4 py-3 text-left text-red-300 font-bold hover:bg-green-800 transition-colors duration-200"
+            >
+              Stop game
+            </button>
+          )}
+        </div>
+      )}
+    </div>
   );
+
+  const setupPage = <PlayerSetup onStartGame={startGame} />;
 
   const gamePage = !gameState ? (
     <Navigate to="/" replace />
@@ -257,7 +349,7 @@ function App() {
             onHit={hit}
             onStand={stand}
             onNewGame={newGame}
-            onShowLeaderboard={() => setShowLeaderboard(true)}
+            onShowLeaderboard={openLeaderboard}
           />
         </div>
 
@@ -289,25 +381,33 @@ function App() {
         )}
       </div>
 
-      {/* Leaderboard Modal */}
-      {showLeaderboard && (
+    </div>
+  );
+
+  const leaderboardPage = (
+    <div className="min-h-screen bg-gradient-to-br from-green-800 to-green-900 p-4 pt-20">
+      <div className="max-w-7xl mx-auto flex justify-center">
         <Leaderboard
           leaderboard={leaderboard}
-          onClose={() => setShowLeaderboard(false)}
+          variant="page"
+          onClose={() => navigate(gameState ? '/game' : '/')}
+          closeLabel={gameState ? 'Back to game' : 'Back to main'}
         />
-      )}
-
-      {/* Cookie consent */}
-      <CookieBanner />
+      </div>
     </div>
   );
 
   return (
-    <Routes>
-      <Route path="/" element={setupPage} />
-      <Route path="/game" element={gamePage} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      {menu}
+      <Routes>
+        <Route path="/" element={setupPage} />
+        <Route path="/game" element={gamePage} />
+        <Route path="/leaderboard" element={leaderboardPage} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <CookieBanner />
+    </>
   );
 }
 
